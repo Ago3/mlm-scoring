@@ -18,7 +18,7 @@ from . import batchify as btf_generic
 
 from .loaders import Corpus, ScoredCorpus
 from .models import SUPPORTED_MLMS, SUPPORTED_LMS
-from .models.bert import BERTRegression, AlbertForMaskedLMOptimized, BertForMaskedLMOptimized, DistilBertForMaskedLMOptimized
+from .models.bert import BERTRegression, AlbertForMaskedLMOptimized, BertForMaskedLMOptimized, DistilBertForMaskedLMOptimized, BertweetForMaskedLMOptimized
 from .models.gpt2 import GPT2Model
 
 
@@ -570,7 +570,7 @@ class MLMScorerPT(BaseScorer):
 
     @staticmethod
     def _check_support(model) -> bool:
-        return isinstance(model, transformers.XLMWithLMHeadModel) or isinstance(model, transformers.BertForMaskedLM) or isinstance(model, AlbertForMaskedLMOptimized) or isinstance(model, BertForMaskedLMOptimized) or isinstance(model, DistilBertForMaskedLMOptimized)
+        return isinstance(model, transformers.XLMWithLMHeadModel) or isinstance(model, transformers.BertForMaskedLM) or isinstance(model, AlbertForMaskedLMOptimized) or isinstance(model, BertForMaskedLMOptimized) or isinstance(model, DistilBertForMaskedLMOptimized) or isinstance(model, BertweetForMaskedLMOptimized)
 
 
     def _ids_to_masked(self, token_ids: np.ndarray) -> List[Tuple[np.ndarray, List[int]]]:
@@ -718,6 +718,7 @@ class MLMScorerPT(BaseScorer):
 
                     if isinstance(self._model.module, AlbertForMaskedLMOptimized) or \
                         isinstance(self._model.module, BertForMaskedLMOptimized) or \
+                        isinstance(self._model.module, BertweetForMaskedLMOptimized) or \
                         isinstance(self._model.module, DistilBertForMaskedLMOptimized):
                         # Because BERT does not take a length parameter
                         alen = torch.arange(token_ids.shape[1], dtype=torch.long)

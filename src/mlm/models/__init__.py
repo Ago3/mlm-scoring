@@ -13,7 +13,7 @@ import torch
 import transformers
 
 from .gpt2 import gpt2_117m, gpt2_345m
-from .bert import BERTRegression, AlbertForMaskedLMOptimized, BertForMaskedLMOptimized, DistilBertForMaskedLMOptimized
+from .bert import BERTRegression, AlbertForMaskedLMOptimized, BertForMaskedLMOptimized, DistilBertForMaskedLMOptimized, BertweetForMaskedLMOptimized
 
 # get_model() is from:
 # https://github.com/dmlc/gluon-nlp/blob/master/scripts/text_generation/model/__init__.py
@@ -74,7 +74,9 @@ SUPPORTED_MLMS = [
     'roberta-large-en-cased',
     'bert-base-en-uncased-owt',
     'bert-base-multi-uncased',
-    'bert-base-multi-cased'
+    'bert-base-multi-cased',
+    'vinai/bertweet-base',
+    'RobertaModel'
 ]
 
 SUPPORTED_LMS = [
@@ -99,6 +101,18 @@ def get_pretrained(ctxs: List[mx.Context], name: str = 'bert-base-en-uncased', p
                 model, loading_info = AlbertForMaskedLMOptimized.from_pretrained(params_file, output_loading_info=True)
 
             tokenizer = transformers.AlbertTokenizer.from_pretrained(model_fullname)
+            vocab = None
+
+        elif model_name.startswith('bertweet'):
+
+            model_official_fullname = 'vinai/bertweet-base'
+
+            if params_file is None:
+                model, loading_info = BertweetForMaskedLMOptimized.from_pretrained(model_official_fullname, output_loading_info=True)
+            else:
+                model, loading_info = BertweetForMaskedLMOptimized.from_pretrained(params_file, output_loading_info=True)
+
+            tokenizer = transformers.AutoTokenizer.from_pretrained(model_official_fullname)
             vocab = None
 
         elif model_name.startswith('bert-'):
