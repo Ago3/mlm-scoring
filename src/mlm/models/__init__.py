@@ -112,7 +112,7 @@ def get_pretrained(ctxs: List[mx.Context], name: str = 'bert-base-en-uncased', p
             else:
                 model, loading_info = BertweetForMaskedLMOptimized.from_pretrained(params_file, output_loading_info=True)
 
-            tokenizer = transformers.AutoTokenizer.from_pretrained(model_official_fullname)
+            tokenizer = transformers.AutoTokenizer.from_pretrained(model_official_fullname, normalization=True)
             vocab = None
 
         elif model_name.startswith('bert-'):
